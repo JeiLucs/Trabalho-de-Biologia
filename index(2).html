@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz: Síndrome de Patau</title>
+<style>
+:root{--navy:#0b1f3a;--navy2:#16355f;--car:#c68642;--car2:#e0a766;--ink:#0b1f3a;--mut:#53647c;--line:#e3e8f0;--ok:#15803d;--okb:#dcfce7;--no:#dc2626;--nob:#fee2e2}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{min-height:100dvh;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);line-height:1.5;touch-action:manipulation;background:linear-gradient(160deg,#fff 0%,#eef2f8 55%,#f8eedf 100%) fixed;padding:max(14px,env(safe-area-inset-top)) 14px max(20px,env(safe-area-inset-bottom))}
+.wrap{max-width:640px;margin:0 auto}
+section:not(.hidden){animation:rise .55s cubic-bezier(.2,.8,.2,1)}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 10px 30px rgba(11,31,58,.12);margin-bottom:14px}
+.hidden{display:none!important}
+h1{font-size:clamp(1.5rem,6vw,2rem);line-height:1.2;letter-spacing:-.02em;margin-bottom:10px}
+h2{font-size:1.2rem;margin-bottom:12px}
+p{color:var(--mut)}
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;position:relative;overflow:hidden;border:0}
+.hero::after{content:"";position:absolute;right:-50px;top:-50px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(224,167,102,.6),transparent 70%);animation:float 6s ease-in-out infinite}
+.hero h1,.hero p,.chips,.chr{position:relative;z-index:1}
+.hero p{color:#d6e0ee}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.chips span{border:1px solid rgba(224,167,102,.7);background:rgba(255,255,255,.1);padding:5px 12px;border-radius:99px;font-size:.82rem;font-weight:600}
+.chr{display:flex;gap:10px;align-items:flex-end}
+.chr i{width:16px;height:48px;border-radius:99px;background:linear-gradient(var(--car2) 0 42%,#fff 42% 48%,var(--car) 48%);animation:wig 2.4s ease-in-out infinite}
+.chr i:nth-child(2){animation-delay:.3s}.chr i:nth-child(3){animation-delay:.6s}
+.chr em{font-style:normal;font-weight:800;color:var(--car2);font-size:1.5rem;margin-left:6px}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;padding:12px 18px;border:0;border-radius:14px;font-size:1rem;font-weight:800;color:var(--navy);background:linear-gradient(135deg,var(--car),var(--car2));cursor:pointer;touch-action:manipulation;box-shadow:0 6px 16px rgba(198,134,66,.4);transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--car);box-shadow:none}
+.btn.sm{width:auto;min-height:50px;font-size:.9rem;padding:10px 16px}
+#btn-next:not(.hidden){animation:pop .4s,pulse 1.8s 1s infinite}
+.top{display:flex;justify-content:flex-end;margin-bottom:12px}
+label{display:block;font-weight:700;margin:18px 0 8px}
+input[type=text]{width:100%;min-height:52px;padding:12px 14px;border:2px solid var(--line);border-radius:14px;font-size:1rem;color:var(--ink);margin-bottom:14px;background:#f6f8fc}
+input[type=text]:focus{outline:3px solid rgba(198,134,66,.35);border-color:var(--car)}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 16px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--car),var(--car2),var(--car));background-size:200% 100%;animation:shim 2s linear infinite;border-radius:99px;transition:width .5s}
+.cat .bar i{animation:shim 2s linear infinite,grow 1.1s .3s both}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:700;font-size:.9rem}
+.live{color:#8a5520}
+.tag{background:#f8ebd8;color:#8a5520;padding:5px 12px;border-radius:99px;font-size:.78rem;font-weight:700;text-align:right}
+.q{font-size:1.12rem;font-weight:700;margin-bottom:14px}
+.opt{display:block;width:100%;min-height:54px;text-align:left;padding:13px 16px;margin-bottom:10px;border:2px solid var(--line);border-radius:14px;background:#f6f8fc;font-size:.98rem;color:var(--ink);cursor:pointer;touch-action:manipulation;font-family:inherit;animation:pop .45s both;animation-delay:calc(var(--i)*80ms);transition:transform .15s}
+.opt:active:not(:disabled){transform:scale(.98);border-color:var(--car)}
+.opt.ok{background:var(--okb);border-color:var(--ok);font-weight:700;animation:okp .6s}
+.opt.no{background:var(--nob);border-color:var(--no);animation:shake .45s}
+.opt:disabled{cursor:default}
+.exp{border-radius:14px;padding:14px;margin:6px 0 14px;font-size:.93rem;animation:pop .4s}
+.exp.ok{background:var(--okb);color:#14532d}.exp.no{background:var(--nob);color:#7f1d1d}
+.fact{margin-top:10px;padding:10px 12px;background:rgba(255,255,255,.85);border-left:4px solid var(--car);border-radius:8px;color:var(--navy)}
+.score{font-size:3.4rem;font-weight:800;text-align:center;color:var(--navy);line-height:1.1}
+.center{text-align:center}
+.badge{width:fit-content;margin:12px auto 0;padding:8px 18px;border-radius:99px;background:var(--navy);color:#fff;font-weight:700;border-bottom:3px solid var(--car);animation:pop .6s .4s both}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;text-align:center;font-size:.8rem;color:var(--mut)}
+.stats div{background:#f8eedf;border-radius:12px;padding:10px 4px}.stats b{display:block;font-size:1.1rem;color:var(--navy)}
+.cat{margin:12px 0}.cat>div:first-child{display:flex;justify-content:space-between;font-size:.92rem;font-weight:600}
+.rv{border-left:5px solid var(--no);padding:10px 12px;margin:12px 0;background:#f9fafc;border-radius:0 12px 12px 0;font-size:.9rem}
+.rv.ok{border-color:var(--ok)}.rv b{display:block;margin-bottom:4px}.rv small{display:block;color:var(--mut);margin-top:4px;font-size:.85rem}
+.lock{text-align:center}.lock .score{margin:10px 0}
+.modal{position:fixed;inset:0;background:rgba(11,31,58,.7);display:flex;align-items:center;justify-content:center;padding:18px;z-index:10}
+.modal .card{max-width:340px;width:100%;text-align:center;margin:0;animation:pop .35s}
+#qr{display:flex;justify-content:center;margin:14px 0;word-break:break-all;font-size:.8rem}
+#qr img{max-width:100%;height:auto}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:20}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.96)}}
+@keyframes shake{25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+@keyframes okp{0%{box-shadow:0 0 0 0 rgba(21,128,61,.6)}100%{box-shadow:0 0 0 16px rgba(21,128,61,0)}}
+@keyframes pulse{0%,100%{box-shadow:0 6px 16px rgba(198,134,66,.4)}50%{box-shadow:0 6px 26px rgba(198,134,66,.85)}}
+@keyframes float{50%{transform:translate(-14px,16px)}}
+@keyframes wig{50%{transform:translateY(-8px) rotate(6deg)}}
+@keyframes shim{to{background-position:200% 0}}
+@keyframes grow{from{width:0}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section id="s-start">
+  <div class="top"><button class="btn ghost sm" data-qr>Ver QR Code</button></div>
+  <div class="card hero">
+    <h1>Quiz: Síndrome de Patau</h1>
+    <p>Teste o que você sabe sobre a Trissomia do Cromossomo 13: causas, sintomas, diagnóstico e prognóstico. São 10 perguntas e você tem uma única tentativa neste dispositivo.</p>
+    <div class="chips"><span>10 perguntas</span><span>5 tópicos</span><span>Tentativa única</span></div>
+    <div class="chr" aria-hidden="true"><i></i><i></i><i></i><em>13</em></div>
+  </div>
+  <div class="card">
+    <p>Leia cada pergunta com atenção. Depois de responder, você vê a explicação e uma curiosidade. Seu resultado fica salvo neste aparelho e não pode ser refeito.</p>
+    <label for="nome">Nome completo</label>
+    <input type="text" id="nome" placeholder="Digite seu nome completo" autocomplete="name" enterkeyhint="go">
+    <button class="btn" id="btn-start" disabled>Iniciar Quiz</button>
+  </div>
+</section>
+
+<section id="s-quiz" class="hidden">
+  <div class="card">
+    <div class="meta"><span id="prog-txt">1/10</span><span class="live" id="live">Acertos: 0</span><span class="tag" id="cat"></span></div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="q" id="q"></div>
+    <div id="opts"></div>
+    <div id="exp" class="exp hidden"></div>
+    <button class="btn hidden" id="btn-next">Próxima Pergunta</button>
+  </div>
+</section>
+
+<section id="s-result" class="hidden">
+  <div class="card hero">
+    <h1 id="r-title"></h1>
+    <p id="r-msg"></p>
+  </div>
+  <div class="card">
+    <div class="score" id="r-score"></div>
+    <div class="badge" id="r-badge"></div><div class="stats" id="r-stats"></div>
+  </div>
+  <div class="card"><h2>Desempenho por categoria</h2><div id="r-cats"></div></div>
+  <div class="card"><h2>Revisão das respostas</h2><div id="r-rev"></div></div>
+  <button class="btn ghost" data-qr>Gerar QR Code</button>
+</section>
+
+<section id="s-lock" class="hidden">
+  <div class="card lock">
+    <h1>Você já realizou este quiz neste dispositivo!</h1>
+    <p id="l-name"></p>
+    <div class="score" id="l-score"></div>
+    <p>Sua nota final registrada</p>
+  </div>
+</section>
+
+</div>
+
+<canvas id="cf"></canvas>
+<div class="modal hidden" id="modal">
+  <div class="card">
+    <h2>QR Code desta página</h2>
+    <div id="qr"></div>
+    <button class="btn" id="qr-close">Fechar</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const CATS=["Introdução","Causas Genéticas","Sintomas","Diagnóstico e Tratamento","Prognóstico"];
+const Q=[
+{c:0,q:"O que é a Síndrome de Patau?",o:["Uma infecção viral adquirida durante a gestação","Uma condição genética rara causada por um cromossomo 13 extra","Uma doença causada pela falta de um cromossomo X","Um distúrbio metabólico causado por deficiência de vitaminas"],a:1,e:"A Síndrome de Patau é uma condição genética rara causada pela presença de material extra do cromossomo 13. Ela afeta o desenvolvimento do cérebro, do coração e de outros órgãos."},
+{c:0,q:"O que significa dizer que a pessoa tem trissomia do 13?",o:["Possui três cópias do cromossomo 13 em vez de duas","Possui 13 cromossomos a menos","Possui três pares de cromossomos sexuais","Possui o cromossomo 13 ausente"],a:0,e:"Trissomia significa ter três cópias de um cromossomo em vez do par habitual. Na trissomia do 13 há 47 cromossomos nas células, em vez de 46."},
+{c:1,q:"Qual erro da divisão celular é a principal causa da trissomia do 13?",o:["Mutação por exposição à radiação solar","Duplicação do DNA mitocondrial","Não-disjunção, falha na separação dos cromossomos durante a meiose","Fusão de dois óvulos"],a:2,e:"Na não-disjunção, o par de cromossomos 13 não se separa na meiose. O gameta fica com uma cópia a mais e, após a fecundação, o embrião tem três cópias. A idade materna avançada aumenta esse risco."},
+{c:1,q:"Sobre o cromossomo 13 extra, qual afirmação está correta?",o:["Na forma completa ele está presente em todas as células; no mosaicismo, só em parte delas","Ele sempre aparece apenas nas células do cérebro","Ele é sempre herdado do pai por um gene dominante","Ele é adquirido depois do nascimento"],a:0,e:"Na trissomia completa, todas as células carregam o cromossomo extra. No mosaicismo, só parte das células o tem, e na translocação o material extra está ligado a outro cromossomo."},
+{c:2,q:"Qual destas características físicas é típica da Síndrome de Patau?",o:["Baixa estatura com pescoço alado","Polidactilia, ou seja, dedos extras nas mãos ou nos pés","Pele muito fina e transparente","Crescimento exagerado dos ossos longos"],a:1,e:"A polidactilia, geralmente pós-axial, e a fenda labiopalatina estão entre os sinais mais característicos. Também são comuns microftalmia e pés em formato anormal."},
+{c:2,q:"Quais alterações internas graves estão associadas à Síndrome de Patau?",o:["Apenas problemas leves de visão","Holoprosencefalia e cardiopatias congênitas","Somente alterações na pele","Ausência total de órgãos digestivos"],a:1,e:"Na holoprosencefalia, o cérebro não se divide em dois hemisférios durante a gestação. Cardiopatias congênitas, como as comunicações entre as câmaras cardíacas, ocorrem na maioria dos casos."},
+{c:3,q:"Qual exame confirma o diagnóstico de trissomia do 13?",o:["Hemograma completo","Raio-X do tórax do bebê","Cariótipo, obtido por exemplo por amniocentese","Teste do pezinho"],a:2,e:"O cariótipo mostra os cromossomos e confirma a trissomia. A amostra pode vir da amniocentese ou da biópsia de vilo corial. O ultrassom e o NIPT (DNA fetal no sangue materno) sugerem o risco, mas são exames de triagem."},
+{c:3,q:"Como é o tratamento para a Síndrome de Patau?",o:["Existe uma cura com medicação específica","Cirurgia única que corrige o cromossomo extra","Não há cura; o cuidado é multidisciplinar e pode incluir cuidados paliativos","Apenas repouso, sem acompanhamento médico"],a:2,e:"Não existe cura, pois a alteração está nas células. O cuidado envolve equipe multidisciplinar, tratamento dos sintomas, suporte respiratório e alimentar, cirurgias selecionadas e cuidados paliativos para dar conforto ao bebê e apoio à família."},
+{c:4,q:"Qual é o prognóstico mais comum na Síndrome de Patau?",o:["A maioria vive até a idade adulta sem complicações","A maioria dos bebês não completa o primeiro ano de vida","A expectativa de vida é igual à da população geral","Os sintomas desaparecem com o crescimento"],a:1,e:"As malformações graves levam a complicações como problemas respiratórios e cardíacos. Muitos bebês falecem nos primeiros dias ou semanas, e só uma pequena parte sobrevive além do primeiro ano. Formas em mosaico tendem a ter evolução menos grave."},
+{c:4,q:"Qual é a importância do aconselhamento genético para as famílias?",o:["Evitar qualquer tipo de acompanhamento médico","Esclarecer o diagnóstico, o risco de recorrência e orientar as decisões da família","Garantir a cura do bebê","Substituir o cariótipo"],a:1,e:"O aconselhamento genético explica o diagnóstico, o prognóstico e o risco de ter outro filho com a condição, que depende do tipo de alteração, como translocação. Ele também oferece apoio emocional e acompanhamento médico contínuo."}
+];
+const KEY="patauQuizV1";
+const F=["A síndrome leva o nome do médico alemão Klaus Patau, que descreveu a trissomia do 13 em 1960.","A trissomia do 13 ocorre em torno de 1 a cada 5.000 a 16.000 nascidos vivos, conforme a fonte consultada.","Na maioria dos casos o erro de separação acontece na formação do óvulo, por isso o risco cresce com a idade materna.","A translocação envolve o cromossomo 13 em uma minoria dos casos; nela, um dos pais pode ser portador equilibrado sem ter sintomas.","Esses sinais costumam ser notados já no ultrassom morfológico, no segundo trimestre da gestação.","Olhos muito próximos ou pequenos (microftalmia) também podem aparecer, pois a face se forma junto com o cérebro.","O NIPT pode ser feito a partir da 10ª semana de gestação, apenas com uma amostra de sangue da mãe.","O plano de cuidado é individual e as decisões são tomadas em conjunto pela família e pela equipe de saúde.","Cerca de 90% dos bebês não passam do primeiro ano; casos raros, em geral em mosaico, sobrevivem por muitos anos.","Quando a causa é translocação, o cariótipo dos pais ajuda a calcular o risco em futuras gestações."];
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let S=load()||{name:"",answers:[],done:false};
+function show(id){["s-start","s-quiz","s-result","s-lock"].forEach(x=>$(x).classList.toggle("hidden",x!==id));window.scrollTo(0,0)}
+const score=()=>S.answers.reduce((n,a,i)=>n+(a===Q[i].a?1:0),0);
+
+/* Nome / início */
+const nome=$("nome"),bs=$("btn-start");
+nome.addEventListener("input",()=>{bs.disabled=nome.value.trim().length<3});
+nome.addEventListener("keydown",e=>{if(e.key==="Enter"&&!bs.disabled){e.preventDefault();nome.blur();start()}});
+bs.addEventListener("click",start);
+function start(){S={name:nome.value.trim(),answers:[],done:false,t:Date.now()};save();renderQ()}
+
+/* Perguntas */
+function renderQ(){
+  const i=S.answers.length,q=Q[i];
+  show("s-quiz");
+  $("prog-txt").textContent=(i+1)+"/10";
+  $("prog").style.width=(i/10*100)+"%";
+  $("cat").textContent=CATS[q.c];$("live").textContent="Acertos: "+score();
+  $("q").textContent=q.q;
+  $("exp").className="exp hidden";
+  $("btn-next").classList.add("hidden");
+  $("btn-next").textContent=i===9?"Ver Resultado":"Próxima Pergunta";
+  const box=$("opts");box.innerHTML="";
+  q.o.forEach((t,k)=>{
+    const b=document.createElement("button");
+    b.className="opt";b.style.setProperty("--i",k);b.textContent=t;
+    b.addEventListener("click",()=>answer(k));
+    box.appendChild(b);
+  });
+}
+let locked=false;
+function answer(k){
+  if(locked)return;locked=true;
+  const i=S.answers.length,q=Q[i];
+  S.answers.push(k);save();
+  [...$("opts").children].forEach((b,j)=>{
+    b.disabled=true;
+    if(j===q.a)b.classList.add("ok");
+    else if(j===k)b.classList.add("no");
+  });
+  const ok=k===q.a;
+  const ex=$("exp");
+  ex.className="exp "+(ok?"ok":"no");
+  ex.innerHTML="<b>"+(ok?"Correto!":"Incorreto.")+"</b> "+esc(q.e)+'<div class="fact"><b>Você sabia?</b> '+esc(F[i])+"</div>";
+  $("live").textContent="Acertos: "+score();
+  if(!ok&&navigator.vibrate)navigator.vibrate(120);
+  $("btn-next").classList.remove("hidden");
+  $("btn-next").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+$("btn-next").addEventListener("click",()=>{
+  locked=false;
+  if(S.answers.length>=10){S.done=true;S.end=Date.now();save();renderResult()}else renderQ();
+});
+
+/* Resultado */
+function renderResult(){
+  const sc=score(),n=esc(S.name.split(" ")[0]);
+  show("s-result");
+  $("r-title").textContent="Parabéns, "+S.name.split(" ")[0]+"!";
+  $("r-msg").textContent=sc>=8?"Excelente desempenho! Você domina o assunto.":sc>=5?"Bom resultado! Você conhece bem os pontos principais.":"Obrigado por participar! Vale revisar o conteúdo sobre a síndrome.";
+  countUp($("r-score"),sc);
+  $("r-badge").textContent=sc>=9?"Nível Especialista":sc>=7?"Nível Avançado":sc>=5?"Nível Intermediário":"Nível Iniciante";
+  $("r-stats").innerHTML="<div><b>"+sc+"</b>acertos</div><div><b>"+(10-sc)+"</b>erros</div><div><b>"+fmt(S.end-S.t)+"</b>tempo</div>";
+  if(sc>=7)confetti();
+  let h="";
+  CATS.forEach((c,ci)=>{
+    let t=0,p=0;Q.forEach((q,i)=>{if(q.c===ci){t++;if(S.answers[i]===q.a)p++}});
+    h+='<div class="cat"><div><span>'+esc(c)+'</span><span>'+p+'/'+t+'</span></div><div class="bar" style="margin:6px 0 0"><i style="width:'+(p/t*100)+'%"></i></div></div>';
+  });
+  $("r-cats").innerHTML=h;
+  let r="";
+  Q.forEach((q,i)=>{
+    const a=S.answers[i],ok=a===q.a;
+    r+='<div class="rv '+(ok?'ok':'')+'"><b>'+(i+1)+'. '+esc(q.q)+'</b>Sua resposta: '+esc(q.o[a])+(ok?' (correta)':'')+(ok?'':'<small>Resposta correta: '+esc(q.o[q.a])+'</small>')+'<small>'+esc(q.e)+'</small></div>';
+  });
+  $("r-rev").innerHTML=r;
+}
+
+function countUp(el,to){let n=0;el.textContent="0 / 10";if(!to)return;const t=setInterval(()=>{n++;el.textContent=n+" / 10";if(n>=to)clearInterval(t)},120)}
+function fmt(ms){if(!ms||ms<0||isNaN(ms))return"-";const s=Math.round(ms/1000);return Math.floor(s/60)+"min "+String(s%60).padStart(2,"0")+"s"}
+function confetti(){const c=$("cf"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;const col=["#c68642","#e0a766","#0b1f3a","#16355f","#f1d3a8"];const P=Array.from({length:130},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.6,r:4+Math.random()*6,vy:2+Math.random()*3,vx:-1+Math.random()*2,a:Math.random()*6,c:col[Math.random()*5|0]}));let f=0;(function d(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.vy;p.x+=p.vx+Math.sin(p.a+=.05);x.fillStyle=p.c;x.fillRect(p.x,p.y,p.r,p.r*1.6)});if(++f<260)requestAnimationFrame(d);else x.clearRect(0,0,c.width,c.height)})()}
+/* Tela de bloqueio */
+function renderLock(){
+  show("s-lock");
+  $("l-name").textContent=S.name;
+  $("l-score").textContent=score()+" / 10";
+}
+
+/* QR Code */
+function openQR(){
+  const box=$("qr");box.innerHTML="";
+  const url=location.href.split("#")[0];
+  if(window.QRCode){new QRCode(box,{text:url,width:230,height:230,correctLevel:QRCode.CorrectLevel.M})}
+  else box.textContent=url;
+  $("modal").classList.remove("hidden");
+}
+document.querySelectorAll("[data-qr]").forEach(b=>b.addEventListener("click",openQR));
+$("qr-close").addEventListener("click",()=>$("modal").classList.add("hidden"));
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")$("modal").classList.add("hidden")});
+
+/* Inicialização: tentativa única */
+if(S.answers.length>=10){S.done=true;save();renderLock();}
+else if(S.name&&S.answers.length>0&&S.answers.length<10)renderQ();
+else if(S.name&&S.answers.length===0&&S.t)renderQ();
+else show("s-start");
+</script>
+</body>
+</html>
